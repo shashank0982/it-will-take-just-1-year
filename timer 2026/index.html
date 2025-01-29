@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Countdown</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #d4af37;
+      text-align: center;
+    }
+    .countdown {
+      background: rgba(44, 53, 100, 0.7);
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    }
+    .time {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #f0f0f0;
+      padding: 1em;
+    }
+    .week-tracker {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 20px;
+      max-width: 80%;
+    }
+    .week {
+      width: 40px;
+      height: 40px;
+      margin: 5px;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      border-radius: 5px;
+      transition: background 0.5s ease-in-out;
+    }
+    .completed {
+      background: #d4af37;
+    }
+    .celebration {
+      display: none;
+      font-size: 2em;
+      color: #ffcc00;
+      margin-top: 20px;
+      animation: pop 1s infinite alternate;
+    }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
+    }
+  </style>
+</head>
+<body>
+  <div class="countdown">
+    <h1>The Countdown</h1>
+    <div class="time" id="timer">0 Days 0 Hours 0 Minutes 0 Seconds</div>
+  </div>
+  <div class="week-tracker" id="week-tracker"></div>
+  <div class="celebration" id="celebration">🎉 Congratulations! 🎉</div>
+  <script>
+    const startDate = new Date("January 1, 2025 00:00:00").getTime();
+    const endDate = new Date("January 1, 2026 00:00:00").getTime();
+    const totalWeeks = 52;
+    const weekTracker = document.getElementById("week-tracker");
+    
+    for (let i = 1; i <= totalWeeks; i++) {
+      let weekBox = document.createElement("div");
+      weekBox.classList.add("week");
+      weekBox.textContent = i;
+      weekTracker.appendChild(weekBox);
+    }
+    
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const timeLeft = endDate - now;
+      const weeksPassed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24 * 7));
+      document.querySelectorAll(".week").forEach((box, index) => {
+        if (index < weeksPassed) {
+          box.classList.add("completed");
+        }
+      });
+      
+      const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+      
+      document.getElementById("timer").innerHTML = `${days} Days ${hours} Hours ${minutes} Minutes ${seconds} Seconds`;
+      
+      if (timeLeft < 0) {
+        clearInterval(countdown);
+        document.getElementById("timer").innerHTML = "Countdown Finished!";
+        document.getElementById("celebration").style.display = "block";
+      }
+    }
+    
+    const countdown = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
